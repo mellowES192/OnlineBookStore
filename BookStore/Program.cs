@@ -11,7 +11,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDefaultIdentity<BookStoreUser>().AddRoles<IdentityRole>().
     AddEntityFrameworkStores<BookStoreContext>();
 
-
 var app = builder.Build();
 
 using (var serviceScope = app.Services.CreateScope())

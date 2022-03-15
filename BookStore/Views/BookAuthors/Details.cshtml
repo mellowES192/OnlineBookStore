@@ -1,10 +1,10 @@
 ﻿@model BookStore.Models.BookAuthor
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Подробно об авторе";
 }
 
-<h1>Details</h1>
+<h1>Подробно об авторе</h1>
 
 <div>
     <h4>BookAuthor</h4>
@@ -19,6 +19,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.ID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Изменить</a> |
+    <a asp-action="Index">Вернуться к списку</a>
 </div>

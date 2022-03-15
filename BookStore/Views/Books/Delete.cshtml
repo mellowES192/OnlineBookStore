@@ -1,14 +1,13 @@
 ﻿@model BookStore.Models.Book
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Удалить книгу";
 }
 
-<h1>Delete</h1>
+<h1>Удалить книгу</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Вы уверены, что хотите удалить книгу?</h3>
 <div>
-    <h4>Book</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -45,7 +44,7 @@
             @Html.DisplayNameFor(model => model.BookAuthor)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BookAuthor.ID)
+            @Html.DisplayFor(model => model.BookAuthor.Id)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Store)
@@ -57,7 +56,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Удалить" class="btn btn-danger" /> |
+        <a asp-action="Index">Вернуться к списку</a>
     </form>
 </div>

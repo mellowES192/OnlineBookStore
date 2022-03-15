@@ -37,7 +37,7 @@ namespace BookStore.Controllers
             }
 
             var bookAuthor = await _context.BookAuthors
-                .FirstOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (bookAuthor == null)
             {
                 return NotFound();
@@ -57,7 +57,7 @@ namespace BookStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name")] BookAuthor bookAuthor)
+        public async Task<IActionResult> Create([Bind("Id,Name")] BookAuthor bookAuthor)
         {
             if (ModelState.IsValid)
             {
@@ -89,9 +89,9 @@ namespace BookStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name")] BookAuthor bookAuthor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] BookAuthor bookAuthor)
         {
-            if (id != bookAuthor.ID)
+            if (id != bookAuthor.Id)
             {
                 return NotFound();
             }
@@ -105,7 +105,7 @@ namespace BookStore.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookAuthorExists(bookAuthor.ID))
+                    if (!BookAuthorExists(bookAuthor.Id))
                     {
                         return NotFound();
                     }
@@ -128,7 +128,7 @@ namespace BookStore.Controllers
             }
 
             var bookAuthor = await _context.BookAuthors
-                .FirstOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (bookAuthor == null)
             {
                 return NotFound();
@@ -150,7 +150,7 @@ namespace BookStore.Controllers
 
         private bool BookAuthorExists(int id)
         {
-            return _context.BookAuthors.Any(e => e.ID == id);
+            return _context.BookAuthors.Any(e => e.Id == id);
         }
     }
 }

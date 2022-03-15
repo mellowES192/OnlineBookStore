@@ -52,7 +52,7 @@ namespace BookStore.Controllers
         // GET: Books/Create
         public IActionResult Create()
         {
-            ViewData["BookAuthorId"] = new SelectList(_context.BookAuthors, "ID", "ID");
+            ViewData["BookAuthorId"] = new SelectList(_context.BookAuthors, "Id", "Name");
             ViewData["StoreId"] = new SelectList(_context.Stores, "Id", "Name");
             return View();
         }
@@ -70,7 +70,7 @@ namespace BookStore.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BookAuthorId"] = new SelectList(_context.BookAuthors, "ID", "ID", book.BookAuthorId);
+            ViewData["BookAuthorId"] = new SelectList(_context.BookAuthors, "Id", "Id", book.BookAuthorId);
             ViewData["StoreId"] = new SelectList(_context.Stores, "Id", "Name", book.StoreId);
             return View(book);
         }

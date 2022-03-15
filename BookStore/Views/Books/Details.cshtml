@@ -1,13 +1,12 @@
 ﻿@model BookStore.Models.Book
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Подробно о книге";
 }
 
-<h1>Details</h1>
+<h1>Подробно о книге</h1>
 
 <div>
-    <h4>Book</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -44,7 +43,7 @@
             @Html.DisplayNameFor(model => model.BookAuthor)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BookAuthor.ID)
+            @Html.DisplayFor(model => model.BookAuthor.Id)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Store)
@@ -55,6 +54,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Изменить</a> |
+    <a asp-action="Index">Вернуться к списку</a>
 </div>
