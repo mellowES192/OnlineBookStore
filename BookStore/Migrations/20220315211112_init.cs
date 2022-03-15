@@ -197,8 +197,7 @@ namespace BookStore.Migrations
                 name: "Books",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ISBN = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -230,7 +229,7 @@ namespace BookStore.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     BookId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BookId1 = table.Column<int>(type: "int", nullable: true),
+                    BookId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -256,17 +255,17 @@ namespace BookStore.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PictureUri = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BookId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BookId1 = table.Column<int>(type: "int", nullable: true)
+                    BookId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BookPictures", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BookPictures_Books_BookId1",
-                        column: x => x.BookId1,
+                        name: "FK_BookPictures_Books_BookId",
+                        column: x => x.BookId,
                         principalTable: "Books",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -319,9 +318,9 @@ namespace BookStore.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookPictures_BookId1",
+                name: "IX_BookPictures_BookId",
                 table: "BookPictures",
-                column: "BookId1");
+                column: "BookId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Books_BookAuthorId",

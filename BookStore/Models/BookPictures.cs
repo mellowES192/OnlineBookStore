@@ -6,8 +6,8 @@
 
         public string? PictureUri { get; set; }
 
-        public string? BookId { get; set; }
+        public Guid BookId { get; set; }
 
-        public Book? Book { get; set; }
+        public Book Book { get; set; }
     }
 }

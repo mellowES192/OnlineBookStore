@@ -133,7 +133,7 @@ namespace BookStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ISBN,Price,PictureUri,BookAuthorId,StoreId")] Book book)
+        public async Task<IActionResult> Edit(Guid? id, [Bind("Id,Name,Description,ISBN,Price,BookAuthorId,StoreId")] Book book)
         {
             if (id != book.Id)
             {
@@ -166,17 +166,17 @@ namespace BookStore.Controllers
         }
 
         // GET: Books/Delete/5
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var book = await _context.Books
+            var book = await _context.Books.Include(a => a.BookPictures)
                 .Include(b => b.BookAuthor)
                 .Include(b => b.Store)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id.Equals(id));
             if (book == null)
             {
                 return NotFound();
@@ -188,7 +188,7 @@ namespace BookStore.Controllers
         // POST: Books/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(Guid? id)
         {
             var book = await _context.Books.FindAsync(id);
             _context.Books.Remove(book);
@@ -196,7 +196,7 @@ namespace BookStore.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BookExists(int id)
+        private bool BookExists(Guid? id)
         {
             return _context.Books.Any(e => e.Id == id);
         }
