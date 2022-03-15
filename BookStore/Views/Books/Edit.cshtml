@@ -1,4 +1,4 @@
-﻿@model BookStore.Models.Book
+﻿@model BookStore.ViewModels.CreateBookViewModel
 
 @{
     ViewData["Title"] = "Изменить книгу";
@@ -31,11 +31,6 @@
                 <label asp-for="Price" class="control-label">Цена</label>
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PictureUri" class="control-label">Изображение</label>
-                <input asp-for="PictureUri" class="form-control" />
-                <span asp-validation-for="PictureUri" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="BookAuthorId" class="control-label">Автор</label>

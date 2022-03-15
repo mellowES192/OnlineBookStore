@@ -20,6 +20,8 @@ public class BookStoreContext : IdentityDbContext<BookStoreUser>
 
     public DbSet<Category> Categories { get; set; }
 
+    public DbSet<BookPictures> BookPictures { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

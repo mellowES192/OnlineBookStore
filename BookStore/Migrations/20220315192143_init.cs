@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BookStore.Migrations
 {
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -52,13 +52,13 @@ namespace BookStore.Migrations
                 name: "BookAuthors",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BookAuthors", x => x.ID);
+                    table.PrimaryKey("PK_BookAuthors", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -67,7 +67,7 @@ namespace BookStore.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -197,12 +197,12 @@ namespace BookStore.Migrations
                 name: "Books",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ISBN = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ISBN = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    PictureUri = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BookAuthorId = table.Column<int>(type: "int", nullable: false),
                     StoreId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -213,7 +213,7 @@ namespace BookStore.Migrations
                         name: "FK_Books_BookAuthors_BookAuthorId",
                         column: x => x.BookAuthorId,
                         principalTable: "BookAuthors",
-                        principalColumn: "ID",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Books_Stores_StoreId",
@@ -229,24 +229,44 @@ namespace BookStore.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BookId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    BookId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BookId1 = table.Column<int>(type: "int", nullable: true),
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BookCategory", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BookCategory_Books_BookId",
-                        column: x => x.BookId,
+                        name: "FK_BookCategory_Books_BookId1",
+                        column: x => x.BookId1,
                         principalTable: "Books",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_BookCategory_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BookPictures",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PictureUri = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BookId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BookId1 = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookPictures", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BookPictures_Books_BookId1",
+                        column: x => x.BookId1,
+                        principalTable: "Books",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -289,14 +309,19 @@ namespace BookStore.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookCategory_BookId",
+                name: "IX_BookCategory_BookId1",
                 table: "BookCategory",
-                column: "BookId");
+                column: "BookId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BookCategory_CategoryId",
                 table: "BookCategory",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookPictures_BookId1",
+                table: "BookPictures",
+                column: "BookId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Books_BookAuthorId",
@@ -330,16 +355,19 @@ namespace BookStore.Migrations
                 name: "BookCategory");
 
             migrationBuilder.DropTable(
+                name: "BookPictures");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Books");
+                name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Books");
 
             migrationBuilder.DropTable(
                 name: "BookAuthors");

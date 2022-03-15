@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using BookStore.Data;
 using BookStore.Models;
 using Microsoft.AspNetCore.Authorization;
+using BookStore.ViewModels;
 
 namespace BookStore.Controllers
 {
@@ -16,9 +17,11 @@ namespace BookStore.Controllers
     public class BooksController : Controller
     {
         private readonly BookStoreContext _context;
+        private IWebHostEnvironment webHostEnvironment;
 
-        public BooksController(BookStoreContext context)
+        public BooksController(IWebHostEnvironment webHostEnvironment, BookStoreContext context)
         {
+            this.webHostEnvironment = webHostEnvironment;
             _context = context;
         }
 
@@ -30,17 +33,17 @@ namespace BookStore.Controllers
         }
 
         // GET: Books/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var book = await _context.Books
+            var book = await _context.Books.Include(a=>a.BookPictures)
                 .Include(b => b.BookAuthor)
                 .Include(b => b.Store)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id.Equals(id));
             if (book == null)
             {
                 return NotFound();
@@ -62,21 +65,53 @@ namespace BookStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,ISBN,Price,PictureUri,BookAuthorId,StoreId")] Book book)
+        public async Task<IActionResult> Create(CreateBookViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(book);
+                var model = new Book()
+                {
+                    Name = vm.Name,
+                    Description = vm.Description,
+                    ISBN = vm.ISBN,
+                    Price = vm.Price,
+                    BookAuthorId = vm.BookAuthorId,
+                    StoreId = vm.StoreId,
+                };
+                foreach (var item in vm.Pictures)
+                {
+                    model.BookPictures.Add(new BookPictures()
+                    {
+                        PictureUri = UploadImage(item),
+                        Book = model
+                    });
+                }
+               _context.Books.Add(model);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BookAuthorId"] = new SelectList(_context.BookAuthors, "Id", "Id", book.BookAuthorId);
-            ViewData["StoreId"] = new SelectList(_context.Stores, "Id", "Name", book.StoreId);
-            return View(book);
+            return View(vm);
+        }
+
+        private string UploadImage(IFormFile item)
+        {
+            string fileName = null;
+            if (item !=null)
+            {
+                string uploadDir = Path.Combine(webHostEnvironment.WebRootPath, "Images");
+                fileName = Guid.NewGuid().ToString() + "-" + item.FileName;
+                string filePath = Path.Combine(uploadDir, fileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    item.CopyTo(fileStream);
+                }
+                
+            }
+            return fileName;
         }
 
         // GET: Books/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -88,7 +123,7 @@ namespace BookStore.Controllers
             {
                 return NotFound();
             }
-            ViewData["BookAuthorId"] = new SelectList(_context.BookAuthors, "ID", "ID", book.BookAuthorId);
+            ViewData["BookAuthorId"] = new SelectList(_context.BookAuthors, "Id", "Id", book.BookAuthorId);
             ViewData["StoreId"] = new SelectList(_context.Stores, "Id", "Name", book.StoreId);
             return View(book);
         }
@@ -98,7 +133,7 @@ namespace BookStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Description,ISBN,Price,PictureUri,BookAuthorId,StoreId")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ISBN,Price,PictureUri,BookAuthorId,StoreId")] Book book)
         {
             if (id != book.Id)
             {
@@ -125,13 +160,13 @@ namespace BookStore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BookAuthorId"] = new SelectList(_context.BookAuthors, "ID", "ID", book.BookAuthorId);
+            ViewData["BookAuthorId"] = new SelectList(_context.BookAuthors, "Id", "Id", book.BookAuthorId);
             ViewData["StoreId"] = new SelectList(_context.Stores, "Id", "Name", book.StoreId);
             return View(book);
         }
 
         // GET: Books/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id == null)
             {
@@ -161,7 +196,7 @@ namespace BookStore.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BookExists(string id)
+        private bool BookExists(int id)
         {
             return _context.Books.Any(e => e.Id == id);
         }
