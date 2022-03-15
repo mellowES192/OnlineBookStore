@@ -4,16 +4,13 @@ using BookStore.Data;
 using BookStore.Areas.Identity.Data;
 using BookStore.Models;
 
-
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("BookStoreContextConnection");builder.Services.AddDbContext<BookStoreContext>(options =>
-    options.UseSqlServer(connectionString));
 // Add services to the container.
+builder.Services.AddDbContext<BookStoreContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("BookStoreContextConnection")));
 builder.Services.AddControllersWithViews();
 builder.Services.AddDefaultIdentity<BookStoreUser>().AddRoles<IdentityRole>().
     AddEntityFrameworkStores<BookStoreContext>();
-//builder.Services.AddScoped<BookStoreContext>();
-//builder.Services.AddScoped <UserManager<BookStoreUser>>();
+
 
 var app = builder.Build();
 
