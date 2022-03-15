@@ -1,4 +1,4 @@
 # OnlineBookStore
-Логин и пароль Администратор:
+Логин и пароль Администратора:
 admin@bookstoresite.com
 Admin,./123
