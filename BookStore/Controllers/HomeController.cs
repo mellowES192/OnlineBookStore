@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace BookStore.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "User")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

@@ -21,8 +21,8 @@ namespace BookStore.Models
                 }
             }
 
-            string Email = "admin@bookstoresite.com";
-            string password = "Admin,./123";
+            string Email = "user@bookstoresite.com";
+            string password = "User,./123";
             if (userManager.FindByEmailAsync(Email).Result == null)
             {
                 BookStoreUser user = new BookStoreUser();
@@ -31,7 +31,7 @@ namespace BookStore.Models
                 IdentityResult result = userManager.CreateAsync(user,password).Result;
                 if (result.Succeeded)
                 {
-                    userManager.AddToRoleAsync(user, "Admin").Wait();
+                    userManager.AddToRoleAsync(user, "User").Wait();
                 }
             }
         }
