@@ -26,6 +26,18 @@ namespace BookStore.Controllers
             return View(await bookStoreContext.ToListAsync());
         }
 
+        public IActionResult Details(Guid? id)
+        {
+            Cart cart = new Cart()
+            {
+                Book = _context.Books.Include(b => b.BookAuthor).FirstOrDefault(m => m.Id.Equals(id)),
+                Count = 1,
+                BookId = (Guid)id,
+
+            };
+            return View(cart);
+        }
+
         public IActionResult Privacy()
         {
             return View();

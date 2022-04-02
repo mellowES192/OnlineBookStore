@@ -22,6 +22,8 @@ public class BookStoreContext : IdentityDbContext<BookStoreUser>
 
     public DbSet<BookPictures> BookPictures { get; set; }
 
+    public DbSet<Cart> Cart { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
