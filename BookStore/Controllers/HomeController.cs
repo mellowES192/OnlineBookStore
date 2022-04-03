@@ -25,7 +25,7 @@ namespace BookStore.Controllers
             var bookStoreContext = _context.Books.Include(b => b.BookAuthor).Include(b => b.Store).Include(a => a.BookPictures);
             return View(await bookStoreContext.ToListAsync());
         }
-
+        [HttpGet]
         public IActionResult Details(Guid? id)
         {
             Cart cart = new Cart()
@@ -37,6 +37,24 @@ namespace BookStore.Controllers
             };
             return View(cart);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Details(Cart cart)
+        {
+            if (!ModelState.IsValid)
+            {
+                var cartItem = _context.Cart.FirstOrDefault(m => m.Id.Equals(cart.BookId));
+
+                if(cartItem == null)
+                {
+                    _context.Cart.Add(cart);
+                    _context.SaveChanges();
+                }  
+            }
+            return RedirectToAction("Index");
+        }
+
+
 
         public IActionResult Privacy()
         {
