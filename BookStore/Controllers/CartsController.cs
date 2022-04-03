@@ -23,7 +23,7 @@ namespace BookStore.Controllers
         // GET: Carts
         public async Task<IActionResult> Index()
         {
-            var bookStoreContext = _context.Cart.Include(c => c.Book);
+            var bookStoreContext = _context.Cart.Include(c => c.Book).Include(b=>b.Book.BookPictures);
             return View(await bookStoreContext.ToListAsync());
         }
 
