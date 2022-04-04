@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookStore.Data;
 using BookStore.Models;
+using BookStore.ViewModels;
 
 namespace BookStore.Controllers
 {
@@ -15,16 +16,26 @@ namespace BookStore.Controllers
     {
         private readonly BookStoreContext _context;
 
+        public CartVM vm { get; set; }
+
         public CartsController(BookStoreContext context)
         {
             _context = context;
         }
 
         // GET: Carts
-        public async Task<IActionResult> Index()
+        public ActionResult Index()
         {
-            var bookStoreContext = _context.Cart.Include(c => c.Book).Include(b=>b.Book.BookPictures);
-            return View(await bookStoreContext.ToListAsync());
+            vm = new CartVM()
+            {
+                Cart = _context.Cart.Include(c => c.Book).Include(b => b.Book.BookPictures),
+            };
+
+            foreach (var item in vm.Cart)
+            {
+                vm.Total += (((int)@item.Book.Price) * @item.Count);
+            }
+            return View(vm);
         }
 
         // GET: Carts/Details/5
